@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block title %}Search Users - Spotlog{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="mb-4">🔍 Search Users</h2>
+      
+      <!-- Search Form -->
+      <form method="get" class="mb-4">
+        <div class="input-group input-group-lg">
+          <input 
+            type="text" 
+            name="q" 
+            class="form-control" 
+            placeholder="Search by username..." 
+            value="{{ query }}"
+            required
+          />
+          <button class="btn btn-primary" type="submit">Search</button>
+          {% if query %}
+          <a href="{% url 'search_users' %}" class="btn btn-secondary">Clear</a>
+          {% endif %}
+        </div>
+      </form>
+      
+      <!-- Search Results -->
+      {% if query %}
+        {% if users %}
+          <div class="alert alert-success mb-4">
+            Found <strong>{{ users.count }}</strong> user{{ users.count|pluralize }}
+          </div>
+          
+          <div class="list-group">
+            {% for search_user in users %}
+            <a href="{% url 'user_profile' search_user.username %}" class="list-group-item list-group-item-action">
+              <div class="d-flex align-items-center">
+                <!-- User Avatar -->
+                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" 
+                     style="width: 50px; height: 50px; font-size: 24px; color: white; margin-right: 15px;">
+                  {{ search_user.username|first|upper }}
+                </div>
+                
+                <!-- User Info -->
+                <div class="flex-grow-1">
+                  <h5 class="mb-0">{{ search_user.username }}</h5>
+                  {% if search_user.first_name or search_user.last_name %}
+                  <small class="text-muted">
+                    {{ search_user.first_name }} {{ search_user.last_name }}
+                  </small>
+                  {% endif %}
+                </div>
+                
+                <!-- Post Count -->
+                <div class="text-end">
+                  <small class="badge bg-info">
+                    {{ search_user.tweet_set.count }} post{{ search_user.tweet_set.count|pluralize }}
+                  </small>
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="alert alert-warning" role="alert">
+            <strong>No users found</strong> matching "{{ query }}". Try a different search term.
+          </div>
+        {% endif %}
+      {% else %}
+        <div class="alert alert-info" role="alert">
+          Enter a username to search for travelers and view their profiles!
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

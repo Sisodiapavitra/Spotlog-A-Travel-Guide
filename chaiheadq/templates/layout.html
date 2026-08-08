@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="{% static 'css/site.css' %}" rel="stylesheet">
+    <title>
+        {% block title %}
+        Chai aur django
+        {% endblock %}
+    </title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'home' %}">Spotlog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link{% if request.path == '/' %} active{% endif %}" aria-current="page" href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'tweet_list' %}">Feed</a>
+        </li>
+      </ul>
+      
+      <!-- Search Bar Available on All Pages -->
+      <form class="d-flex me-3" method="get" action="{% url 'search_users' %}" role="search">
+        <input class="form-control me-2" type="search" name="q" placeholder="Search users..." aria-label="Search" value="{{ request.GET.q }}"/>
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+      
+      <!-- Authentication Links -->
+      {% if user.is_authenticated %}
+      <div class="d-flex gap-2">
+        <a href="{% url 'user_profile' user.username %}" class="btn btn-info btn-sm">👤 {{ user.username }}</a>
+        <form method="post" action="{% url 'logout' %}" class="d-inline">
+          {% csrf_token %}
+          <button class="btn btn-danger btn-sm" type="submit">Logout</button>
+        </form>
+      </div>
+      {% else %}
+      <div class="d-flex gap-2">
+        <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Register</a>
+        <a href="{% url 'login' %}" class="btn btn-success btn-sm">Login</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Home - Spotlog{% endblock %}
+
+{% block content %}
+<div class="py-5 text-center hero">
+  <div class="container">
+    <h1 class="display-5 fw-bold">Welcome to Spotlog</h1>
+    <p class="lead mb-4">Share quick thoughts, photos, and connect with friends. Lightweight, simple, and delightful.</p>
+    <p class="d-flex justify-content-center gap-2">
+      <a href="{% url 'tweet_create' %}" class="btn btn-primary btn-lg">Post a Tweet</a>
+      <a href="{% url 'tweet_list' %}" class="btn btn-outline-secondary btn-lg">View Tweets</a>
+    </p>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <h2 class="mb-3">Latest Tweets</h2>
+  <div class="row">
+    {% for tweet in latest_tweets %}
+    <div class="col-md-6 mb-3">
+      <div class="card tweet-card">
+        {% if tweet.image %}
+        <img src="{{ tweet.image.url }}" class="card-img-top" alt="tweet image">
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ tweet.user.username }}</h5>
+          <p class="card-text">{{ tweet.content|linebreaksbr }}</p>
+          <p class="text-muted small mb-0">{{ tweet.created_at|date:"M d, Y H:i" }}</p>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p>No tweets yet — be the first to post!</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

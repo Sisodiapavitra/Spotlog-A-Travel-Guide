@@ -1,0 +1,167 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ profile_user.username }}'s Profile - Spotlog{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+  <!-- Profile Header -->
+  <div class="row mb-5">
+    <div class="col-md-12">
+      <div class="card profile-header">
+        <div class="card-body text-center">
+          <!-- Profile Picture -->
+          <div class="mb-3">
+            <div class="profile-avatar" style="width: 150px; height: 150px; margin: 0 auto;">
+              {% if profile_user.profile.profile_image %}
+              <img src="{{ profile_user.profile.profile_image.url }}" alt="{{ profile_user.username }}" 
+                   style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid #007bff;">
+              {% else %}
+              <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" 
+                   style="width: 100%; height: 100%; font-size: 64px; color: white;">
+                {{ profile_user.username|first|upper }}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          
+          <h2>{{ profile_user.username }}</h2>
+          
+          {% if profile_user.first_name and profile_user.last_name %}
+          <p class="text-muted mb-2"><strong>{{ profile_user.first_name }} {{ profile_user.last_name }}</strong></p>
+          {% endif %}
+          
+          {% if profile_user.profile.bio %}
+          <p class="mb-3" style="max-width: 600px; margin-left: auto; margin-right: auto;">{{ profile_user.profile.bio }}</p>
+          {% endif %}
+          
+          {% if profile_user.email %}
+          <p class="text-muted mb-3">
+            <i class="bi bi-envelope"></i> {{ profile_user.email }}
+          </p>
+          {% endif %}
+          
+          <div class="mb-4">
+            <span class="badge bg-info">{{ tweet_count }} Travel Post{{ tweet_count|pluralize }}</span>
+            <span class="badge bg-secondary">Member since {{ profile_user.date_joined|date:"M Y" }}</span>
+          </div>
+          
+          <!-- Explorers Section -->
+          <div class="mb-4">
+            <div class="row justify-content-center">
+              <div class="col-auto">
+                <div class="card bg-primary border-0">
+                  <div class="card-body text-center py-2">
+                    <p class="mb-1"><strong style="color: black;">{{ followers_count }}</strong></p>
+                    <small style="color: black;">Explorer{{ followers_count|pluralize }}</small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-auto">
+                <div class="card bg-primary border-0">
+                  <div class="card-body text-center py-2">
+                    <p class="mb-1"><strong style="color: black;">{{ following_count }}</strong></p>
+                    <small style="color: black;">Following</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {% if user.is_authenticated and user == profile_user %}
+          <div class="mt-3">
+            <a href="{% url 'tweet_create' %}" class="btn btn-primary">Create New Post</a>
+            <a href="{% url 'edit_profile' %}" class="btn btn-warning">Edit Profile</a>
+          </div>
+          {% elif user.is_authenticated %}
+          <div class="mt-3">
+            {% if is_following %}
+            <a href="{% url 'unfollow_user' profile_user.username %}" class="btn btn-outline-danger" style="color: #000;">Unfollow Explorer ❌</a>
+            {% else %}
+            <a href="{% url 'follow_user' profile_user.username %}" class="btn btn-outline-primary" style="color: #000;">Follow Explorer ✈️</a>
+            {% endif %}
+          </div>
+          {% else %}
+          <a href="{% url 'login' %}" class="btn btn-primary">Login to Follow</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Tweets Grouped by Category -->
+  <div class="row">
+    <div class="col-md-12">
+      {% if categories %}
+        {% for category_name, tweets in categories.items %}
+        <div class="mb-5">
+          <!-- Category Header with Emoji -->
+          <h3 class="mb-4 pb-2 border-bottom">
+            {% if category_name == 'Food' %}
+              🍽️ Food
+            {% elif category_name == 'Budget' %}
+              💰 Budget
+            {% elif category_name == 'Hidden Gem' %}
+              💎 Hidden Gem
+            {% elif category_name == 'Accommodation' %}
+              🏨 Accommodation
+            {% elif category_name == 'Others' %}
+              📝 Others
+            {% else %}
+              📝 {{ category_name }}
+            {% endif %}
+          </h3>
+          
+          <!-- Posts Grid for this category -->
+          <div class="row g-3 mb-4">
+            {% for tweet in tweets %}
+            <div class="col-md-6 col-lg-4">
+              <div class="card tweet-card h-100">
+                {% if tweet.photo %}
+                <img src="{{ tweet.photo.url }}" class="card-img-top" alt="Travel photo" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                  <!-- Location Tag -->
+                  {% if tweet.location_name %}
+                  <div class="mb-2">
+                    <span class="badge bg-primary">📍 {{ tweet.location_name }}</span>
+                  </div>
+                  {% endif %}
+                  
+                  <p class="card-text flex-grow-1">{{ tweet.text }}</p>
+                  <small class="text-muted">{{ tweet.created_at|date:"M d, Y H:i" }}</small>
+                  
+                  {% if user.is_authenticated and user == profile_user %}
+                  <div class="mt-3">
+                    <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-danger btn-sm">Delete</a>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="alert alert-info" role="alert">
+          <strong>No travel posts yet!</strong>
+          {% if user.is_authenticated and user == profile_user %}
+          Start sharing your travel experiences. <a href="{% url 'tweet_create' %}" class="alert-link">Create a post</a>
+          {% else %}
+          This user hasn't posted any travel stories yet.
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="row mt-5">
+    <div class="col-md-12 text-center">
+      <a href="{% url 'tweet_list' %}" class="btn btn-outline-secondary">Back to Feed</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

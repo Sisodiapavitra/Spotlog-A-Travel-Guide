@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Chai aur tweet
+{% endblock %}
+
+{% block content %}
+
+<h1 class="text-center mt-4">Travel Microblog</h1>
+
+<div class="container mt-4">
+  <!-- Search Bar -->
+  <div class="row mb-4">
+    <div class="col-md-8 mx-auto">
+      <form method="get" class="d-flex gap-2">
+        <input type="text" name="location" class="form-control" placeholder="Search by location..." value="{{ search_location }}">
+        <button type="submit" class="btn btn-info">Search</button>
+        {% if search_location %}
+        <a href="{% url 'tweet_list' %}" class="btn btn-secondary">Clear</a>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+
+  <a class="btn btn-primary mb-4" href="{% url 'tweet_create' %}">Create tweet</a>
+  <div class="row gap-3">
+    {% for tweet in tweets%}
+    <div class="card" style="width: 18rem;">
+      {% if tweet.photo %}
+      <img src="{{tweet.photo.url}}" class="card-img-top" alt="...">
+      {% endif %}
+      <div class="card-body">
+        <!-- Clickable Username -->
+        <a href="{% url 'user_profile' tweet.user.username %}" class="text-decoration-none">
+          <h5 class="card-title">{{tweet.user.username}}</h5>
+        </a>
+        
+        <!-- Location Tag -->
+        {% if tweet.location_name %}
+        <div class="mb-2">
+          <span class="badge bg-primary">📍 {{ tweet.location_name }}</span>
+        </div>
+        {% endif %}
+        
+        <!-- Travel Category Badge -->
+        {% if tweet.travel_category %}
+        <div class="mb-2">
+          <span class="badge bg-success">🏷️ {{ tweet.travel_category }}</span>
+        </div>
+        {% endif %}
+        
+        <p class="card-text">{{tweet.text}}</p>
+        <small class="text-muted">{{ tweet.created_at|date:"M d, Y H:i" }}</small>
+        
+        {% if tweet.user == user %}
+        <div class="mt-3">
+          <a href="{% url 'tweet_edit' tweet.id%}" class="btn btn-primary btn-sm">Edit</a>
+          <a href="{% url 'tweet_delete' tweet.id%}" class="btn btn-danger btn-sm">Delete</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-info col-12">
+      No travel posts found. {% if search_location %}Try a different location.{% else %}Create one!{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

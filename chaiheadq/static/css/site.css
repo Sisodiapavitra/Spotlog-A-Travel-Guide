@@ -1,0 +1,12 @@
+body { background: linear-gradient(180deg, #0f172a 0%, #0b1220 100%); color: #e6eef8; }
+.hero { padding: 4rem 0; background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border-radius: 12px; }
+.card { background: rgba(255,255,255,0.03); border: none; }
+.tweet-card img { max-height: 300px; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px; }
+.navbar { background: rgba(255,255,255,0.02); }
+a.nav-link, .navbar-brand { color: #dbeafe !important; }
+.btn-primary { background-color: #2563eb; border-color: #2563eb; }
+.btn-outline-secondary { color: #cbd5e1; border-color: rgba(255,255,255,0.08); }
+.container { max-width: 960px; }
+@media (max-width: 576px) {
+  .hero { padding: 2rem 1rem; }
+}

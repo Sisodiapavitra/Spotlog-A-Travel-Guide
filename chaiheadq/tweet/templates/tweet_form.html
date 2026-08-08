@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Chai aur tweet
+{% endblock %}
+
+{% block content %}
+
+<h1 class="text-center mt-4">
+    {% if form.instance.pk %} 
+    Edit Travel Post 
+    {% else%} 
+    Create Travel Post
+    {% endif %}
+</h1>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="post" enctype="multipart/form-data" class="form">
+              {% csrf_token %}
+              
+              <!-- Tweet Text -->
+              <div class="mb-3">
+                <label for="{{ form.text.id_for_label }}" class="form-label">Your Travel Story (max 240 characters)</label>
+                {{ form.text }}
+              </div>
+              
+              <!-- Location Name -->
+              <div class="mb-3">
+                <label for="{{ form.location_name.id_for_label }}" class="form-label">📍 Location Name</label>
+                {{ form.location_name }}
+              </div>
+              
+              <!-- Travel Category -->
+              <div class="mb-3">
+                <label for="{{ form.travel_category.id_for_label }}" class="form-label">🏷️ Travel Category</label>
+                {{ form.travel_category }}
+              </div>
+              
+              <!-- Photo Upload -->
+              <div class="mb-3">
+                <label for="{{ form.photo.id_for_label }}" class="form-label">📸 Photo</label>
+                {{ form.photo }}
+              </div>
+              
+              <button class="btn btn-warning" type="submit">Submit</button>
+              <a href="{% url 'tweet_list' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
