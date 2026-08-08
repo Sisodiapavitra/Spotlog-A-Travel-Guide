@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-2rx8-%hlnsqohd4_i3zw+3j$a4oqtdec3!sxnh*@d=&=z@qt69'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['spotlog-a-travel-guide.onrender.com']
 
 
 # Application definition
