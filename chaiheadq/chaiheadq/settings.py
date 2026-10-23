@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-2rx8-%hlnsqohd4_i3zw+3j$a4oqtdec3!sxnh*@d=&=z@qt69
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['spotlog-a-travel-guide.onrender.com','localhost']
+ALLOWED_HOSTS = ['spotlog-a-travel-guide-1.onrender.com','localhost']
 
 
 # Application definition
