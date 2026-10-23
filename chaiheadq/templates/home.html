@@ -21,12 +21,12 @@
     {% for tweet in latest_tweets %}
     <div class="col-md-6 mb-3">
       <div class="card tweet-card">
-        {% if tweet.image %}
-        <img src="{{ tweet.image.url }}" class="card-img-top" alt="tweet image">
+        {% if tweet.photo %}
+        <img src="{{ tweet.photo.url }}" class="card-img-top" alt="Travel photo">
         {% endif %}
         <div class="card-body">
           <h5 class="card-title">{{ tweet.user.username }}</h5>
-          <p class="card-text">{{ tweet.content|linebreaksbr }}</p>
+          <p class="card-text">{{ tweet.text|linebreaksbr }}</p>
           <p class="text-muted small mb-0">{{ tweet.created_at|date:"M d, Y H:i" }}</p>
         </div>
       </div>
